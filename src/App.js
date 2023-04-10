@@ -22,6 +22,11 @@ function App() {
   //event handler for button clicks
   const handleClick = () => {
     setClickCount(clickCount + 1)
+    //update server click count
+    axios.post('http://localhost:3001/countData', {count: clickCount + 1})
+    .then(response => {
+      console.log(response.data)
+    })
   }
   return (
     <div className="App">
