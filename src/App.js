@@ -71,14 +71,6 @@ function App() {
             <li key={index}>{key}: {geoData[key]}</li>
           ))}
         </ul>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
     </div>
   );
