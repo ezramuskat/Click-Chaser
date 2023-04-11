@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 
 import { useEffect, useState } from 'react'
-import axios from 'axios';
+//import axios from 'axios';
 
 function App() {
   //state hook for tracking clicks
@@ -12,18 +12,30 @@ function App() {
   //function to get data from json
   const getCountData = () => {
     console.log('getting count data')
+    /* In an ideal world, this would be the code to get the data from the server
+    Sadly vercel insists on fighting us, so we're just going to get the data from local storage instead
+    This applies to all the other commented out axios code in this file
     axios.get('http://localhost:3001/countData').then(response => {
       console.log(response.data)
       setClickCount(response.data.count)
     })
+    */
+    const countData = localStorage.getItem('clickCount')
+    const actualCountData = countData ? parseInt(countData) : 0
+    setClickCount(actualCountData)
   }
 
   const getGeoData = () => {
     console.log('getting geo data')
+    /*
     axios.get('http://localhost:3001/geoData').then(response => {
       console.log(response.data)
       setGeoData(response.data)
     })
+    */
+    const storedGeoData = localStorage.getItem('geoData')
+    const actualGeoData = storedGeoData ? JSON.parse(storedGeoData) : {}
+    setGeoData(actualGeoData)
   }
 
   useEffect(getCountData, [clickCount])
@@ -33,20 +45,26 @@ function App() {
   const handleClick = () => {
     setClickCount(clickCount + 1)
     //update server click count
+    /*
     axios.post('http://localhost:3001/countData', {count: clickCount + 1})
     .then(response => {
       console.log(response.data)
     })
+    */
+   localStorage.setItem('clickCount', clickCount + 1)
     navigator.geolocation.getCurrentPosition(async (position) => {
       const country = await getCountry(position.coords.latitude, position.coords.longitude)
       const posVal = geoData[country] ? geoData[country] + 1 : 1
       console.log("posVal",posVal)
       setGeoData({...geoData, [country]: posVal})
       console.log("geoData", geoData)
+      /*
       axios.post('http://localhost:3001/geoData', {[country]: posVal})
       .then(response => {
         console.log("response", response.data)
       })
+      */
+     localStorage.setItem('geoData', JSON.stringify({...geoData, [country]: posVal}))
     })
   }
 
